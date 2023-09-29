@@ -1,0 +1,60 @@
+version: '3.9'
+services:
+  nginx_proxy:
+    container_name: nginx_proxy
+    image: nginxproxy/nginx-proxy
+    networks:
+      - directus
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - /etc/ssl/certs:/etc/nginx/certs
+  directus_db:
+    container_name: directus_db
+    image: ghcr.io/baosystems/postgis:13-3.3
+    platform: linux/${ARCH:-amd64}
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    ports:
+      - 5100:5432
+    expose:
+      - 5100
+    networks:
+      - directus
+    volumes:
+      - ./data/database:/var/lib/postgresql/data
+      - ./data/initdb.d:/docker-entrypoint-initdb.d
+  directus:
+    container_name: directus
+    image: directus/directus:latest
+    depends_on:
+      - directus_db
+    ports:
+      - 8055:8055
+    expose:
+      - 8055
+    networks:
+      - directus
+    environment:
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      DB_CLIENT: 'postgres'
+      DB_HOST: 'directus_db'
+      DB_PORT: '5432'
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: 'directus'
+      WEBSOCKETS_ENABLED: true
+      PUBLIC_URL: 'system.foundationful.com'
+      VIRTUAL_HOST: 'system.foundationful.com'
+      VIRTUAL_PORT: 8055
+
+
+networks:
+  directus:
+    name: directus-network
