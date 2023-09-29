@@ -21,4 +21,4 @@ curl -o /etc/systemd/system/docker-compose-app.service https://raw.githubusercon
 systemctl enable docker-compose-app
 
 # Start up the application via Docker Compose
-docker-compose -f /srv/docker/docker-compose.yml up -d
+# docker-compose -f /srv/docker/docker-compose.yml up -d
