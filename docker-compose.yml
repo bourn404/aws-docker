@@ -3,6 +3,7 @@ services:
   nginx_proxy:
     container_name: nginx_proxy
     image: nginxproxy/nginx-proxy
+    restart: always
     networks:
       - directus
     ports:
@@ -32,6 +33,7 @@ services:
   directus:
     container_name: directus
     image: directus/directus:latest
+    restart: always
     depends_on:
       - directus_db
     ports:
