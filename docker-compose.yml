@@ -43,6 +43,8 @@ services:
     networks:
       - directus
     environment:
+      KEY: ${DIRECTUS_KEY}
+      SECRET: ${DIRECTUS_SECRET}
       ADMIN_EMAIL: ${ADMIN_EMAIL}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       DB_CLIENT: 'postgres'
@@ -50,7 +52,7 @@ services:
       DB_PORT: '5432'
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-      DB_DATABASE: 'directus'
+      DB_DATABASE: ${DB_DATABASE}
       WEBSOCKETS_ENABLED: true
       PUBLIC_URL: 'system.foundationful.com'
       VIRTUAL_HOST: 'system.foundationful.com'
